@@ -196,6 +196,8 @@
             border-radius: 10px;
             text-align: center;
             max-width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .modal-content h2 {
@@ -219,8 +221,32 @@
             background-color: #2c4ccc;
         }
 
-        .hidden-link {
-            margin-top: 2rem;
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .letter-example {
+            display: inline-flex;
+            width: 30px;
+            height: 30px;
+            margin: 0 3px;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+        }
+
+        .instruction-grid {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .instructions-section {
+            margin-bottom: 1.5rem;
         }
 
         .confetti {
@@ -286,12 +312,45 @@
                 <div class="key key-backspace" data-key="Backspace">⌫</div>
             </div>
         </div>
-
-        <div class="hidden-link">
-            <button class="button" id="rsvp-button">Click here to RSVP</button>
-        </div>
     </main>
 
+    <!-- Instruction Modal -->
+    <div class="modal" id="instructions-modal">
+        <div class="modal-content">
+            <h2>How to Play</h2>
+            
+            <div class="instructions-section">
+                <p>This is a word-guessing game similar to Wordle. You need to guess a 7-letter word in 6 tries.</p>
+            </div>
+
+            <div class="instructions-section">
+                <h3>How it works:</h3>
+                <p>1. Type a 7-letter word and press Enter</p>
+                <p>2. The color of the tiles will change to show how close your guess was:</p>
+                
+                <div class="instruction-grid">
+                    <div class="letter-example correct">A</div>
+                    <p> = Letter is in the word and in the correct spot</p>
+                </div>
+                
+                <div class="instruction-grid">
+                    <div class="letter-example present">B</div>
+                    <p> = Letter is in the word but in the wrong spot</p>
+                </div>
+                
+                <div class="instruction-grid">
+                    <div class="letter-example absent">C</div>
+                    <p> = Letter is not in the word</p>
+                </div>
+            </div>
+
+            <p><strong>Hint:</strong> The answer is related to our office location!</p>
+            
+            <button class="button" onclick="closeModal()">Got it, let's play!</button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
     <div class="modal" id="success-modal">
         <div class="modal-content">
             <h2>Congratulations! 🎉</h2>
@@ -299,10 +358,14 @@
             <p><strong>Location:</strong> ONE QUBE</p>
             <p><strong>Date:</strong> May 15, 2025</p>
             <p><strong>Time:</strong> 2:00 PM</p>
-            <button class="button" onclick="closeModal()">Close</button>
+            <div class="btn-container">
+                <button class="button" onclick="closeModal()">Close</button>
+                <button class="button" id="success-rsvp-button">Click here to RSVP</button>
+            </div>
         </div>
     </div>
 
+    <!-- Failure Modal -->
     <div class="modal" id="failure-modal">
         <div class="modal-content">
             <h2>Can't figure out your own office? 🤔</h2>
@@ -310,7 +373,10 @@
             <p><strong>Location:</strong> ONE QUBE</p>
             <p><strong>Date:</strong> May 15, 2025</p>
             <p><strong>Time:</strong> 2:00 PM</p>
-            <button class="button" onclick="closeModal()">Close</button>
+            <div class="btn-container">
+                <button class="button" onclick="closeModal()">Close</button>
+                <button class="button" id="failure-rsvp-button">Click here to RSVP</button>
+            </div>
         </div>
     </div>
 
@@ -501,6 +567,9 @@
         function init() {
             initializeGrid();
             
+            // Show instructions modal on page load
+            showModal("instructions-modal");
+            
             // Add click event listeners to the keyboard
             document.querySelectorAll(".key").forEach(key => {
                 key.addEventListener("click", () => {
@@ -513,8 +582,12 @@
                 handleKeyInput(e.key);
             });
             
-            // Add event listener to RSVP button (RickRoll)
-            document.getElementById("rsvp-button").addEventListener("click", () => {
+            // Add event listeners to RSVP buttons in modals (RickRoll)
+            document.getElementById("success-rsvp-button").addEventListener("click", () => {
+                window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
+            });
+            
+            document.getElementById("failure-rsvp-button").addEventListener("click", () => {
                 window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
             });
         }
